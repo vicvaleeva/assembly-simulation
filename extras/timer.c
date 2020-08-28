@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int hour = 0, minute = 0, second = 0, flag = 0;
 
@@ -11,7 +12,13 @@ void printData() {
 	printf("---------------------------------------\n");
 }
 
-int main(void) {
+
+void delay(ms) {
+	current = clock();
+	while (clock() - current < ms);
+}
+
+int main() {
 	
 	printData();
 
