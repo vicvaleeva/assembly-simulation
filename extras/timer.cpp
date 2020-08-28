@@ -77,7 +77,6 @@ void counter() {
 		++second;
 	}
 	selection();
-	printData();
 }
 
 
