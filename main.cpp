@@ -21,7 +21,7 @@ int main() {
 	cout << "\n";
 	cout << "Number of products finished: ";
 	cin >> finished_o;
-	cout << "\n\n";
+	cout << "\n";
 	cout << "#########################################";
 	cout << "\n\n";
 	cout << "Enter parameters for the NEW system:\n";
