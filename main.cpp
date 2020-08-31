@@ -1,6 +1,6 @@
 #include <iostream>
-#include "old.hpp"
-#include "new.hpp"
+#include "old/old.hpp"
+#include "new/new.hpp"
 
 using namespace std;
 
