@@ -1,11 +1,21 @@
 #include <iostream>
+#include <ctime>
 #include "old/old.hpp"
 #include "new/new.hpp"
 
 using namespace std;
 
+int n_o, a_o, dt_o, finished_o, n_n, a_n, dt_n, finished_n;
+Old oldsys;
+New newsys;
+
+void delay(int ms) {
+	ms *= 1000;
+	clock_t timeDelay = ms + clock();
+	while(clock() < timeDelay);
+}
+
 int main() {
-	int n_o, a_o, dt_o, finished_o, n_n, a_n, dt_n, finished_n;
 
 	system("printf \"\033c\"");
 
@@ -41,9 +51,7 @@ int main() {
 	oldsys.init(n_o, a_o, dt_o, finished_o);
 	newsys.init(n_n, a_n, dt_n, finished_n);
 
-	while(true) {
-		cycle();
-	}
+	cycle();
 
 	return 0;
 }
