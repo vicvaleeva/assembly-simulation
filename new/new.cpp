@@ -1,6 +1,6 @@
 #include "new.hpp"
 
-New::New(int set_n, int set_a, int set_dt, int set_finished) {
+void New::init(int set_n, int set_a, int set_dt, int set_finished) {
 	n = set_n;
 	a = set_a;
 	dt = set_dt;

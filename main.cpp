@@ -38,5 +38,12 @@ int main() {
 	cin >> finished_n;
 	cout << "\n\n";
 
+	oldsys.init(n_o, a_o, dt_o, finished_o);
+	newsys.init(n_n, a_n, dt_n, finished_n);
+
+	while(true) {
+		cycle();
+	}
+
 	return 0;
 }
