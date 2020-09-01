@@ -11,7 +11,7 @@ class System {
 	vector<int> status;
 
 public:
-	void init(int &set_n, int &set_a, int &set_dt, int &set_finished);
+	void init(int set_n, int &set_a, int &set_dt);
 	void update();
 	int getFinished();
 

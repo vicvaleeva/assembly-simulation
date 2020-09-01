@@ -1,21 +1,56 @@
 #include <iostream>
+#include <vector>
 #include <ctime>
+#include <sys/ioctl.h>
+#include <termios.h>
 #include "system.hpp"
 
 using namespace std;
 
+int kbhit() {
+	static bool inited = false;
+	int left;
+
+	if (!inited) {
+		termios t;
+		tcgetattr(0, &t);
+		t.c_lflag &= ~ICANON;
+		tcsetattr(0, TCSANOW, &t);
+		setbuf(stdin, NULL);
+		inited = true;
+	}
+
+	ioctl(0, FIONREAD, &left);
+
+	return left;
+}
+
+void selection() {
+	if (getc(stdin) == 49) {
+		exit(0);
+	}
+}
+
 int n_o, a_o, dt_o, n_n, a_n, dt_n;
 
-System oldsys, newsys;
+System oldsys;
+vector<System> newsys;
 
 int hour = 0, minute = 0, second = 0;
-int stoptimeOld, stoptimeNew;
-bool oldStopped = false, newStopped = false;
 
 void delay(int ms) {
-	ms *= 2;
+	ms *= 3;
 	clock_t timeDelay = ms + clock();
 	while(clock() < timeDelay);
+}
+
+int getFinishedNew(vector<System> &v) {
+	int sum = 0;
+	for (int i = 0; i < v.size(); ++i) {
+		sum += v[i].getFinished();
+	}
+
+	return sum;
 }
 
 void printData() {
@@ -24,60 +59,26 @@ void printData() {
 	cout << "   OLD: N = " << n_o << ", a = " << a_o << ", t = " << dt_o << "\n";
 	cout << "   NEW: N = " << n_n << ", a = " << a_n << ", t = " << dt_n << "\n";
 	cout << "\n\n\n" << "        old" << "          new" << "             time\n\n";
-	cout << "        " << oldsys.getFinished() << "          " << newsys.getFinished() << "          ";
+	cout << "        " << oldsys.getFinished() << "          " << getFinishedNew(newsys) << "          ";
 	cout << hour << " : " << minute << " : " << second << "\n\n\n";
 	if (oldsys.getFinished() > 0) {
-		double nw = newsys.getFinished() * 1.0;
+		double nw = getFinishedNew(newsys) * 1.0;
 		double ol = oldsys.getFinished() * 1.0;
 		double ratio = nw / ol;
 		cout << "   Current ratio (old / new): " << ratio << "\n";
 	}
-	cout << "\n   Press Ctrl+Z to exit\n";
-}
-
-bool changed(int &a, int &b) {
-	return a == b ? false : true;
-}
-
-bool defect(bool &flag, int &stoptime, int &current, int &a, int &oldValue, int &newValue, double chance) {
-	if (flag == false) {
-		double r = ((double) rand() / (RAND_MAX));
-		if (r <= chance) {
-			flag = true;
-			stoptime = current + a * 2;
-		}	
-	}
-	if ((flag == true) && (changed(oldValue, newValue))) {
-		if (current < stoptime) {
-			return true;
-		} else {
-			flag = false;
-			return false;
-		}
-	}
-
-	return false;
+	cout << "\n   Press 1 to stop and exit\n\n";
 }
 
 void cycle() {
-	while(true) {
-		int current_time = hour * 3600 + minute * 60 + second;
-		int oldsys_old = oldsys.getFinished();
-		oldsys.update(current_time);	
-		int oldsys_new = oldsys.getFinished();
-
-		int newsys_old = newsys.getFinished();
-		newsys.update(current_time);
-		int newsys_new = newsys.getFinished();
-		
-		if (defect(oldStopped, stoptimeOld, current_time, a_o, oldsys_old, oldsys_new, 0.02)) oldsys.defectObserved();
-
-		if (defect(newStopped, stoptimeNew, current_time, a_n, newsys_old, newsys_new, 0.02)) newsys.defectObserved();
-
+	while(!kbhit()) {
 		printData();
 		delay(1000);
 		++second;
-		
+		oldsys.update();
+		for (int i = 0; i < newsys.size(); ++i) {
+			newsys[i].update();
+		}
 		if (second > 59) {
 			++minute;
 			second = 0;
@@ -89,6 +90,7 @@ void cycle() {
 		}
 		
 	}
+	selection();
 }
 
 int main() {
@@ -118,8 +120,11 @@ int main() {
 	cin >> dt_n;
 	cout << "\n\n";
 	oldsys.init(n_o, a_o, dt_o);
-	newsys.init(n_n, a_n, dt_n);
-
+	for (int i = 0; i < n_n; ++i) {
+		System element;
+		element.init(1, a_n, dt_n);
+		newsys.push_back(element);
+	}
 	cycle();
 
 	return 0;
