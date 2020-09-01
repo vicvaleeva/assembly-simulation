@@ -65,7 +65,7 @@ void printData() {
 		double nw = getFinishedNew(newsys) * 1.0;
 		double ol = oldsys.getFinished() * 1.0;
 		double ratio = nw / ol;
-		cout << "   Current ratio (old / new): " << ratio << "\n";
+		cout << "   Current ratio (new / old): " << ratio << "\n";
 	}
 	cout << "\n   Press 1 to stop and exit\n\n";
 }
