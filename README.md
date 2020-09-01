@@ -2,7 +2,7 @@
 
 To compile and run the simulation, go to simulation (`cd simulation`) and run simulate (`bash simulate`)
 
-To compile and run the plot, go to plot (`cd plot`) and run plot (`plot`)
+To compile and run the plot, go to plot (`cd plot`) and run plot (`bash plot`)
 
 
 ## Reorganization of assembly and quality assurance of computers at the ICL Techno LLC facility to increase manufacturing perfomance by ~28%
