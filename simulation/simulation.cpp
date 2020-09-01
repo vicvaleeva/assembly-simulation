@@ -58,6 +58,14 @@ void printData() {
 	cout << "\n\n";
 	cout << "   OLD: N = " << n_o << ", a = " << a_o << ", t = " << dt_o << "\n";
 	cout << "   NEW: N = " << n_n << ", a = " << a_n << ", t = " << dt_n << "\n";
+	cout << "\n\n";
+	cout << "      O -> O           /\\\n";
+	cout << "           |           |\n";
+	cout << "           \\/          O\n";
+	cout << "      O <- O      <- O . O ->\n";
+	cout << "      |               ...\n";
+	cout << "      \\/               |\n";
+	cout << "     ...              \\/\n";
 	cout << "\n\n\n" << "        old" << "          new" << "             time\n\n";
 	cout << "        " << oldsys.getFinished() << "          " << getFinishedNew(newsys) << "          ";
 	cout << hour << " : " << minute << " : " << second << "\n\n\n";
@@ -67,7 +75,7 @@ void printData() {
 		double ratio = nw / ol;
 		cout << "   Current ratio (new / old): " << ratio << "\n";
 	}
-	cout << "\n   Press 1 to stop and exit\n\n";
+	cout << "\n   Press any key to stop and exit\n\n";
 }
 
 void cycle() {
