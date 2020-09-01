@@ -1,0 +1,4 @@
+g++ -o prog plot.cpp ../class/system.cpp
+./prog
+rm prog
+python3 plot.py
