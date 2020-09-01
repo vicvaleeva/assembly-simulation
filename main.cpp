@@ -3,46 +3,21 @@
 #include <ctime>
 #include <sys/ioctl.h>
 #include <termios.h>
+#include <fstream>
+#include <iterator>
+#include <string>
 #include "system.hpp"
 
 using namespace std;
 
-int kbhit() {
-	static bool inited = false;
-	int left;
-
-	if (!inited) {
-		termios t;
-		tcgetattr(0, &t);
-		t.c_lflag &= ~ICANON;
-		tcsetattr(0, TCSANOW, &t);
-		setbuf(stdin, NULL);
-		inited = true;
-	}
-
-	ioctl(0, FIONREAD, &left);
-
-	return left;
-}
-
-void selection() {
-	if (getc(stdin) == 49) {
-		exit(0);
-	}
-}
-
-int n_o, a_o, dt_o, n_n, a_n, dt_n;
+int n_o = 6, a_o = 232, dt_o = 5, n_n = 6, a_n = 232, dt_n = 5;
 
 System oldsys;
 vector<System> newsys;
 
-int hour = 0, minute = 0, second = 0;
+vector<double> ratios;
 
-void delay(int ms) {
-	ms *= 20;
-	clock_t timeDelay = ms + clock();
-	while(clock() < timeDelay);
-}
+int second = 0;
 
 int getFinishedNew(vector<System> &v) {
 	int sum = 0;
@@ -53,72 +28,33 @@ int getFinishedNew(vector<System> &v) {
 	return sum;
 }
 
-void printData() {
-	system("printf \"\033c\"");
-	cout << "\n\n";
-	cout << "   OLD: N = " << n_o << ", a = " << a_o << ", t = " << dt_o << "\n";
-	cout << "   NEW: N = " << n_n << ", a = " << a_n << ", t = " << dt_n << "\n";
-	cout << "\n\n\n" << "        old" << "          new" << "             time\n\n";
-	cout << "        " << oldsys.getFinished() << "          " << getFinishedNew(newsys) << "          ";
-	cout << hour << " : " << minute << " : " << second << "\n\n\n";
+void addRatio() {
 	if (oldsys.getFinished() > 0) {
 		double nw = getFinishedNew(newsys) * 1.0;
 		double ol = oldsys.getFinished() * 1.0;
 		double ratio = nw / ol;
-		cout << "   Current ratio (old / new): " << ratio << "\n";
+		ratios.push_back(ratio);
+	} else {
+		ratios.push_back(0);
 	}
-	cout << "\n   Press 1 to stop and exit\n\n";
 }
 
 void cycle() {
-	while(!kbhit()) {
-		printData();
-		delay(1000);
+	while(second <= 28800) {
+		addRatio();
 		++second;
 		oldsys.update();
 		for (int i = 0; i < newsys.size(); ++i) {
 			newsys[i].update();
 		}
-		if (second > 59) {
-			++minute;
-			second = 0;
-		}	
-
-		if (minute > 59) {
-			++hour;
-			minute = 0;
-		}
-		
 	}
-	selection();
+	
+	ofstream outFile("text/results.txt");
+	for (const auto &e : ratios) outFile << e << "\n";
+	
 }
 
 int main() {
-
-	system("printf \"\033c\"");
-
-	cout << "Enter parameters for the OLD system:\n";
-	cout << "Number in crew: ";
-	cin >> n_o;
-	cout << "\n";
-	cout << "Total operation time: ";
-	cin >> a_o;
-	cout << "\n";
-	cout << "Single handover time: ";
-	cin >> dt_o;
-	cout << "\n";
-	cout << "#########################################";
-	cout << "\n\n";
-	cout << "Enter parameters for the NEW system:\n";
-	cout << "Number in crew: ";
-	cin >> n_n;
-	cout << "\n";
-	cout << "Total operation time: ";
-	cin >> a_n;
-	cout << "\n";
-	cout << "Single handover time: ";
-	cin >> dt_n;
-	cout << "\n\n";
 	oldsys.init(n_o, a_o, dt_o);
 	for (int i = 0; i < n_n; ++i) {
 		System element;
