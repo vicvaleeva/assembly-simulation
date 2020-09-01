@@ -39,7 +39,7 @@ vector<System> newsys;
 int hour = 0, minute = 0, second = 0;
 
 void delay(int ms) {
-	ms *= 3;
+	ms *= 20;
 	clock_t timeDelay = ms + clock();
 	while(clock() < timeDelay);
 }

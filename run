@@ -1,0 +1,2 @@
+g++ -o prog main.cpp system.cpp
+./prog
