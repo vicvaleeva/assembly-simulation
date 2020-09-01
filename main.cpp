@@ -1,7 +1,6 @@
 #include <iostream>
 #include <ctime>
-#include "old/old.hpp"
-#include "new/new.hpp"
+#include "system.hpp"
 
 using namespace std;
 
@@ -10,10 +9,10 @@ Old oldsys;
 New newsys;
 int hour = 0, minute = 0, second = 0;
 int stoptimeOld, stoptimeNew;
-bool isOldStopped, isNewStopped;
+bool oldStopped = false, newStopped = false;
 
 void delay(int ms) {
-	ms *= 20;
+	ms *= 2;
 	clock_t timeDelay = ms + clock();
 	while(clock() < timeDelay);
 }
@@ -35,11 +34,44 @@ void printData() {
 	cout << "\n   Press Ctrl+Z to exit\n";
 }
 
+bool changed(int &a, int &b) {
+	return a == b ? false : true;
+}
+
+bool defect(bool &flag, int &stoptime, int &current, int &a, int &oldValue, int &newValue, double chance) {
+	if (flag == false) {
+		double r = ((double) rand() / (RAND_MAX));
+		if (r <= chance) {
+			flag = true;
+			stoptime = current + a * 2;
+		}	
+	}
+	if ((flag == true) && (changed(oldValue, newValue))) {
+		if (current < stoptime) {
+			return true;
+		} else {
+			flag = false;
+			return false;
+		}
+	}
+
+	return false;
+}
+
 void cycle() {
 	while(true) {
 		int current_time = hour * 3600 + minute * 60 + second;
+		int oldsys_old = oldsys.getFinished();
 		oldsys.update(current_time);	
+		int oldsys_new = oldsys.getFinished();
+
+		int newsys_old = newsys.getFinished();
 		newsys.update(current_time);
+		int newsys_new = newsys.getFinished();
+		
+		if (defect(oldStopped, stoptimeOld, current_time, a_o, oldsys_old, oldsys_new, 0.02)) oldsys.defectObserved();
+
+		if (defect(newStopped, stoptimeNew, current_time, a_n, newsys_old, newsys_new, 0.02)) newsys.defectObserved();
 
 		printData();
 		delay(1000);

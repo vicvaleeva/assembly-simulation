@@ -1,4 +1,0 @@
-#!/bin/bash
-
-g++ -o escprogram13 main.cpp new/new.cpp old/old.cpp
-./escprogram13
