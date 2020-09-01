@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int n_o = 6, a_o = 232, dt_o = 5, n_n = 6, a_n = 232, dt_n = 5;
+int n_o, a_o, dt_o, n_n, a_n, dt_n, simulationTime;
 
 System oldsys;
 vector<System> newsys;
@@ -40,7 +40,7 @@ void addRatio() {
 }
 
 void cycle() {
-	while(second <= 28800) {
+	while(second <= simulationTime) {
 		addRatio();
 		++second;
 		oldsys.update();
@@ -55,6 +55,34 @@ void cycle() {
 }
 
 int main() {
+	system("printf \"\033c\"");
+
+	cout << "Enter parameters for the OLD system:\n";
+	cout << "Number in crew: ";
+	cin >> n_o;
+	cout << "\n";
+	cout << "Total operation time: ";
+	cin >> a_o;
+	cout << "\n";
+	cout << "Single handover time: ";
+	cin >> dt_o;
+	cout << "\n";
+	cout << "#########################################";
+	cout << "\n\n";
+	cout << "Enter parameters for the NEW system:\n";
+	cout << "Number in crew: ";
+	cin >> n_n;
+	cout << "\n";
+	cout << "Total operation time: ";
+	cin >> a_n;
+	cout << "\n";
+	cout << "Single handover time: ";
+	cin >> dt_n;
+	cout << "\n";
+	cout << "For how many seconds do you want to run the simulation?\n";
+	cin >> simulationTime;
+	cout << "\n\n";
+
 	oldsys.init(n_o, a_o, dt_o);
 	for (int i = 0; i < n_n; ++i) {
 		System element;
