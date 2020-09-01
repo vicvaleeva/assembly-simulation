@@ -4,9 +4,10 @@
 
 using namespace std;
 
-int n_o, a_o, dt_o, finished_o, n_n, a_n, dt_n, finished_n;
-Old oldsys;
-New newsys;
+int n_o, a_o, dt_o, n_n, a_n, dt_n;
+
+System oldsys, newsys;
+
 int hour = 0, minute = 0, second = 0;
 int stoptimeOld, stoptimeNew;
 bool oldStopped = false, newStopped = false;
@@ -20,14 +21,14 @@ void delay(int ms) {
 void printData() {
 	system("printf \"\033c\"");
 	cout << "\n\n";
-	cout << "   OLD: N = " << n_o << ", a = " << a_o << ", t = " << dt_o << ", finished " << finished_o << "\n";
-	cout << "   NEW: N = " << n_n << ", a = " << a_n << ", t = " << dt_n << ", finished " << finished_n << "\n";
+	cout << "   OLD: N = " << n_o << ", a = " << a_o << ", t = " << dt_o << "\n";
+	cout << "   NEW: N = " << n_n << ", a = " << a_n << ", t = " << dt_n << "\n";
 	cout << "\n\n\n" << "        old" << "          new" << "             time\n\n";
 	cout << "        " << oldsys.getFinished() << "          " << newsys.getFinished() << "          ";
 	cout << hour << " : " << minute << " : " << second << "\n\n\n";
 	if (oldsys.getFinished() > 0) {
-		double nw = (newsys.getFinished() - finished_n) * 1.0;
-		double ol = (oldsys.getFinished() - finished_o) * 1.0;
+		double nw = newsys.getFinished() * 1.0;
+		double ol = oldsys.getFinished() * 1.0;
 		double ratio = nw / ol;
 		cout << "   Current ratio (old / new): " << ratio << "\n";
 	}
@@ -104,9 +105,6 @@ int main() {
 	cout << "Single handover time: ";
 	cin >> dt_o;
 	cout << "\n";
-	cout << "Number of products finished: ";
-	cin >> finished_o;
-	cout << "\n";
 	cout << "#########################################";
 	cout << "\n\n";
 	cout << "Enter parameters for the NEW system:\n";
@@ -118,12 +116,9 @@ int main() {
 	cout << "\n";
 	cout << "Single handover time: ";
 	cin >> dt_n;
-	cout << "\n";
-	cout << "Number of products finished: ";
-	cin >> finished_n;
 	cout << "\n\n";
-	oldsys.init(n_o, a_o, dt_o, finished_o);
-	newsys.init(n_n, a_n, dt_n, finished_n);
+	oldsys.init(n_o, a_o, dt_o);
+	newsys.init(n_n, a_n, dt_n);
 
 	cycle();
 
