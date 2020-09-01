@@ -3,7 +3,7 @@
 #include <ctime>
 #include <sys/ioctl.h>
 #include <termios.h>
-#include "system.hpp"
+#include "../class/system.hpp"
 
 using namespace std;
 

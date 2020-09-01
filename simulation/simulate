@@ -1,0 +1,2 @@
+g++ -o .prog simulation.cpp ../class/system.cpp
+./.prog
