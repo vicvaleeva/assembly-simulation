@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iterator>
 #include <string>
-#include "system.hpp"
+#include "../class/system.hpp"
 
 using namespace std;
 
