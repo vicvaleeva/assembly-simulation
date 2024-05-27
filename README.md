@@ -1,4 +1,4 @@
-# Simulation of the model in my proposal to reforming the assembly line at ICL Techno LLC
+# Simulation of the model in my proposal to reforming the assembly line 
 
 To compile and run the simulation, go to simulation (`cd simulation`) and run simulate (`bash simulate`)
 
